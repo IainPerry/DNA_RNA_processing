@@ -31,6 +31,16 @@ project/
 
 ### 1. Setup
 
+```
+git clone https://github.com/IainPerry/DNA_RNA_processing.git
+
+#Optionally
+cd SIF
+chmod +x make_sifs.sh
+./make_sifs.sh
+
+```
+
 Ensure modules or paths for `Singularity`, `SLURM`, and SIF containers are available.
 DEF files are available for container generation.
 
@@ -119,7 +129,7 @@ Additional planned stages include:
 
 ---
 
-## 📖 License
+## License
 
 MIT License — free to use and adapt with attribution.
 
