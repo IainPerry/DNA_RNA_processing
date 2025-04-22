@@ -1,0 +1,21 @@
+Bootstrap: docker
+From: ensemblorg/ensembl-vep:release_105.0
+
+%post
+    apt-get update && apt-get install -y \
+        samtools \
+        curl \
+        unzip \
+        less
+
+    echo "VEP installation done — note: cache is NOT included."
+
+%environment
+    export PATH=/opt/vep/src/ensembl-vep:$PATH
+
+%runscript
+    echo "Running VEP inside container"
+    echo "Remember: you must bind a cache directory when you run this container"
+    echo ""
+    vep $@
+
