@@ -37,3 +37,12 @@ singularity build --remote fastp-v0.23.1.sif fastp-v0.23.1.def
 
 # Build MULTIQC
 # singularity build --remote multiqc-v1.11.sif multiqc-v1.11.def
+
+###################### Under Dev #################################
+# Build VEP
+# singularity build --remote ensembl-vep-105.sif ensembl-vep-105.def
+# module load singularity
+# singularity exec vep_nocache.sif vep_install --AUTO cf --SPECIES homo_sapiens --ASSEMBLY GRCh38 --CACHEDIR /VEP/homo_sapiens
+# singularity exec vep_nocache.sif vep_install --AUTO cf --SPECIES mus_musculus --ASSEMBLY GRCm39 --CACHEDIR /VEP/mus_musculus
+
+
