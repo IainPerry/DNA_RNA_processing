@@ -128,6 +128,7 @@ multiqc/
 ## Contributions
 
 Iain Perry
+(Peter Giles - Some SIF recipies)
 
 Additional planned stages include:
 - Greater depth of QC metrics
