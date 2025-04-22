@@ -304,7 +304,7 @@ else
 
         RETVAL=$(sbatch \
             --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=8 --time="0-6:00" \
-            --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterany${WAITFOR} \
+            --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterok${WAITFOR} \
             --wrap="module load $SINGULARITY
 
 if [ "$RUNTYPE" = "PE" ];
@@ -355,7 +355,7 @@ else
 echo "Waitfor is: $WAITFOR"
         RETVAL=$(sbatch \
             --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=8 --time="0-6:00" \
-            --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterany${WAITFOR} \
+            --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterok${WAITFOR} \
             --wrap="module load $SINGULARITY
 
 if [ "$RUNTYPE" = "PE" ];
@@ -404,7 +404,7 @@ else
 
         RETVAL=$(sbatch \
             --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=2 --time=0-1:00 \
-            --error="$LOGS/bam/slurm_${i}_index.err" --output="$LOGS/bam/slurm_${i}_index.out" --dependency=afterany${WAITFOR2} \
+            --error="$LOGS/bam/slurm_${i}_index.err" --output="$LOGS/bam/slurm_${i}_index.out" --dependency=afterok${WAITFOR2} \
             --wrap="module load $SINGULARITY
 
            singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $SAMTOOLS_SIF samtools index \
@@ -443,7 +443,7 @@ else
 
         RETVAL=$(sbatch \
             --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=4 --time=0-2:00 \
-            --error="$LOGS/counts/slurm_${i}_FC.err" --output="$LOGS/counts/slurm_${i}_FC.out" --dependency=afterany${WAITFOR3} \
+            --error="$LOGS/counts/slurm_${i}_FC.err" --output="$LOGS/counts/slurm_${i}_FC.out" --dependency=afterok${WAITFOR3} \
             --wrap="module load $SINGULARITY
 
 if [ "$CV" = "tc" ];
@@ -532,9 +532,8 @@ else
       if [ ! -f "$vcf_file" ]; then
         RETVAL=$(sbatch \
           --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=8 --time=0-8:00 \
-          --error="$LOGS/VCF/slurm_${sample}_index.err" \
-          --output="$LOGS/VCF/slurm_${sample}_index.out" \
-          --dependency=afterany${WAITFOR3} \
+          --error="$LOGS/VCF/slurm_${sample}_index.err" --output="$LOGS/VCF/slurm_${sample}_index.out" \
+          --dependency=afterok${WAITFOR3} \
           --wrap="module load $SINGULARITY
 
             mkdir -p $TMP/${sample}_somatic
@@ -578,7 +577,7 @@ else
       RETVAL=$(sbatch \
         --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=8 --time=0-8:00 \
         --error="$LOGS/VCF/slurm_${i}_index.err" --output="$LOGS/VCF/slurm_${i}_index.out" \
-        --dependency=afterany${WAITFOR3} \
+        --dependency=afterok${WAITFOR3} \
         --wrap="module load $SINGULARITY
 
           mkdir -p $TMP/${i}
@@ -616,7 +615,7 @@ echo "$WAITFOR4"
 if [ "$SKIPMULTIQC" = "TRUE" ];
   then echo "$(date '+%F %T') - Skipping MultiQC" >> $log_file
   else sbatch --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=1 --time=0-0:10 \
-              --error="$LOGS/slurm_QC.err" --output="$LOGS/slurm_QC.out" --dependency=afterany${WAITFOR4} \
+              --error="$LOGS/slurm_QC.err" --output="$LOGS/slurm_QC.out" --dependency=afterok${WAITFOR4} \
               --wrap="module load $SINGULARITY
                       echo "Starting MultiQC" >> $log_file
                       singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $MULTIQC_SIF multiqc \
