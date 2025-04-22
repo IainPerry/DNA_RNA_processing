@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script to build all required SIFs - comment out any you don't need
-
+module load singularity
 singularity remote login
 
 # Optional
@@ -45,7 +45,6 @@ singularity build --remote fastp-v0.23.1.sif fastp-v0.23.1.def
 ###################### Under Dev #################################
 # Build VEP
 # singularity build ensembl-vep-113.4.sif docker://ensemblorg/ensembl-vep:release_113.4
-# module load singularity
 # singularity exec vep_nocache.sif vep_install --AUTO cf --SPECIES homo_sapiens --ASSEMBLY GRCh38 --CACHEDIR /VEP/homo_sapiens
 # singularity exec vep_nocache.sif vep_install --AUTO cf --SPECIES mus_musculus --ASSEMBLY GRCm39 --CACHEDIR /VEP/mus_musculus
 
