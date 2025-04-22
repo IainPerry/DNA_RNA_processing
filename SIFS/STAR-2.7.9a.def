@@ -1,0 +1,29 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+
+    yum install -y wget
+    yum install -y gcc-c++
+    yum install -y zlib-devel xz-devel 
+    yum install -y make
+
+
+    mkdir /software
+    cd /software
+    # Get latest STAR source from releases
+    wget https://github.com/alexdobin/STAR/archive/2.7.9a.tar.gz
+    tar -xzf 2.7.9a.tar.gz
+    cd STAR-2.7.9a/source
+
+    make STAR
+
+
+%environment
+    export PATH=/software/STAR-2.7.9a/bin/Linux_x86_64_static:$PATH
+
+
+%runscript
+    STAR $@
+    

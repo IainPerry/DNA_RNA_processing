@@ -1,0 +1,17 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+    yum search epel-release
+    yum info epel-release
+    yum install -y epel-release
+    yum install -y gzip
+    yum install -y bwa
+
+%environment
+    
+
+%runscript
+    bwa $@
+
