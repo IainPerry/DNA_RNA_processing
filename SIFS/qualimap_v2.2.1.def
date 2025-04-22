@@ -1,0 +1,42 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+
+    yum install -y dnf-plugins-core
+    yum config-manager --set-enabled powertools
+
+    yum search epel-release
+    yum info epel-release
+    yum install -y epel-release
+    yum install -y java-1.8.0-openjdk-devel
+    yum install -y libxml2-devel
+    yum install -y libcurl-devel
+    yum install -y R
+    yum install -y wget
+    yum install -y openssl-devel
+
+    mkdir /software
+    cd /software
+    wget https://bitbucket.org/kokonech/qualimap/downloads/qualimap_v2.2.1.zip
+    unzip qualimap_v2.2.1.zip
+
+    # Create R dependencies file using BiocManager rather than bioclite
+    cd /software/qualimap_v2.2.1/scripts/
+    echo 'install.packages("BiocManager", repos="http://cran.r-project.org")' >> installDependencies_biocmanager.r
+    echo 'install.packages(c("openssl","optparse","XML"), repos="http://cran.r-project.org")' >> installDependencies_biocmanager.r
+    echo 'BiocManager::install(c("genefilter","NOISeq", "Repitools", "Rsamtools", "rtracklayer"))' >> installDependencies_biocmanager.r
+
+    Rscript /software/qualimap_v2.2.1/scripts/installDependencies_biocmanager.r
+
+
+%environment
+    export JAVA_OPTS="-Djava.awt.headless=true"
+    unset DISPLAY
+    export PATH=/software/qualimap_v2.2.1:$PATH
+
+
+%runscript
+    qualimap $@
+    
