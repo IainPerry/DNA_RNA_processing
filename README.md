@@ -10,7 +10,6 @@ A modular SLURM-based pipeline for processing high-throughput sequencing data â€
 Built to support human and mouse data with runtime checks and SLURM job chaining.
 
 ---
-Why does this use Bash rather than the 'cooler' Nextflow or Snakemake tools.
 Primarily this is for bespoke projects, not for regular/run of the mill pipelines run exactly the same way day in day out.
 Secondly this is used to help teach novice coders some of the basics, so it's designed to be slighly easier to break apart.
 
