@@ -29,6 +29,12 @@ project/
 
 ## Quick Start
 
+### 0. Dependencies
+
+- Singularity
+
+Future development could include options for Local install, Conda and Docker.
+
 ### 1. Setup
 
 ```
