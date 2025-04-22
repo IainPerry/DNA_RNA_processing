@@ -64,6 +64,7 @@
     FC_SIF="$SIF_DIR/featurecounts-2.0.3.sif"
     QUALIMAP_SIF="$SIF_DIR/qualimap_v2.2.1.sif"
     BCFTOOLS_SIF="$SIF_DIR/bcftools_v1.10.2.sif"
+    PICARD_SIF="$SIF_DIR/picard-2.25.6.sif"
     MULTIQC_SIF="$SIF_DIR/multiqc-v1.11.sif"
     MC_config="$SIF_DIR/multiqc.local.config"
     max_jobs="15"
@@ -374,6 +375,16 @@ fi
                    -@ 8 \
                    -o  "$BAM/${i}.bam" \
                    "$BAM/${i}.sam"
+
+              singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $PICARD_SIF \
+                   java -jar $PICARD MarkDuplicates \
+                   I="$BAM/${i}.bam" \
+                   O="$BAM/${i}_dedup.bam" \
+                   M="$LOGS/${i}_dedup_metrics.txt" \
+                   CREATE_INDEX=false \
+                   REMOVE_DUPLICATES=False \
+                   VALIDATION_STRINGENCY=SILENT
+
 rm $BAM/${i}.sam
 echo "$(date '+%F %T') - Submitted job with ID: $job_id" >> $log_file
 ")
@@ -407,13 +418,31 @@ else
             --error="$LOGS/bam/slurm_${i}_index.err" --output="$LOGS/bam/slurm_${i}_index.out" --dependency=afterok${WAITFOR2} \
             --wrap="module load $SINGULARITY
 
-           singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $SAMTOOLS_SIF samtools index \
-                  -@ 2 \
-                  "$BAM/${i}.bam"
+        # Check for dedup BAM and index it
+        if [ -f "$BAM/${i}_dedup.bam" ]; then
+            echo "Indexing deduplicated BAM: ${i}_dedup.bam"
+            singularity exec --bind "$Base/:$Base/" --bind "$SIF_DIR/:$SIF_DIR/" "$SAMTOOLS_SIF" \
+                samtools index -@ 2 "$BAM/${i}_dedup.bam"
 
+            singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $QUALIMAP_SIF qualimap bamqc \
+                -bam "$BAM/${i}_dedup.bam" -gff "${Base}/${STARgenome}${GENCODE}" -outdir $LOGS/bam/${i}_qualimap
+        fi
 
-           singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $QUALIMAP_SIF qualimap bamqc \
-                 -bam "$BAM/${i}.bam" -gff "${Base}/${STARgenome}${GENCODE}" -outdir $LOGS/bam/${i}_qualimap
+        # Check for sorted-by-coords BAM and index it
+        if [ -f "$BAM/${i}_mapAligned.sortedByCoord.out.bam" ]; then
+            echo "Indexing sorted BAM: ${i}_mapAligned.sortedByCoord.out.bam"
+            singularity exec --bind "$Base/:$Base/" --bind "$SIF_DIR/:$SIF_DIR/" "$SAMTOOLS_SIF" \
+                samtools index -@ 2 "$BAM/${i}_mapAligned.sortedByCoord.out.bam"
+
+            singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $QUALIMAP_SIF qualimap bamqc \
+                -bam "$BAM/${i}_mapAligned.sortedByCoord.out.bam" -gff "${Base}/${STARgenome}${GENCODE}" -outdir $LOGS/bam/${i}_qualimap
+        fi
+
+        # Fail if neither exists
+        if [ ! -f "$BAM/${i}_dedup.bam" ] && [ ! -f "$BAM/${i}_mapAligned.sortedByCoord.out.bam" ]; then
+            echo "No BAM file found for $i!"
+            exit 1
+        fi
 ")
 
 JOBID=`echo $RETVAL | sed "s/Submitted batch job //"`
