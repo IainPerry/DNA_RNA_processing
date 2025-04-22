@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 
 def filter_block(from_tag, to_tag, lines):
