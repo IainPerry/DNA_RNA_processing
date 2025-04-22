@@ -32,6 +32,10 @@ singularity build --remote fastp-v0.23.1.sif fastp-v0.23.1.def
 # Build BCFtools
 # singularity build --remote bcftools_v1.10.2.sif bcftools_v1.10.2.def
 
+
+# Build PICARD
+# singularity build --remote picard-2.27.4.sif picard-2.27.4.def
+
 # Build QUALIMAP
 # singularity build --remote qualimap_v2.2.1.sif qualimap_v2.2.1.def
 
