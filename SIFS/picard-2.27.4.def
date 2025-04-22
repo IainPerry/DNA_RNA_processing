@@ -1,0 +1,15 @@
+Bootstrap: docker
+From: openjdk:8-jre
+
+%post
+    mkdir -p /opt/picard
+    cd /opt/picard
+    wget https://github.com/broadinstitute/picard/releases/download/2.27.4/picard.jar
+    ln -s /opt/picard/picard.jar /usr/local/bin/picard
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    alias picard='java -jar /opt/picard/picard.jar'
+
+%runscript
+    java -jar /opt/picard/picard.jar "$@"
