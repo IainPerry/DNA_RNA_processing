@@ -10,6 +10,25 @@ A modular SLURM-based pipeline for processing high-throughput sequencing data �
 Built to support human and mouse data with runtime checks and SLURM job chaining.
 
 ---
+Why does this use Bash rather than the 'cooler' Nextflow or Snakemake tools.
+Primarily this is for bespoke projects, not for regular/run of the mill pipelines run exactly the same way day in day out.
+Secondly this is used to help teach novice coders some of the basics, so it's designed to be slighly easier to break apart.
+
+| **Feature**                   | **Bash**                                              | **Nextflow**                                           | **Snakemake**                                           |
+|-------------------------------|------------------------------------------------------|------------------------------------------------------|-------------------------------------------------------|
+| **Simplicity and Learnability** | ✅ Simple, easy to teach, no extra dependencies needed. | ❌ Steeper learning curve due to Nextflow DSL.         | ❌ Requires learning a custom DSL for workflow logic.   |
+| **Flexibility and Control**    | ✅ Full control over script logic, manual handling.    | ❌ Abstracted control, less granular control.          | ✅ Flexible, highly configurable, but some abstraction. |
+| **Resource Management**        | ✅ Manual control of resources (e.g., SLURM).          | ✅ Advanced built-in resource management and scaling.   | ✅ Built-in resource management for scalability.        |
+| **Debugging and Development**  | ✅ Easier to debug, errors are visible in script.      | ❌ Can be harder to debug due to abstraction.          | ✅ Easier than Nextflow; more transparent errors.       |
+| **Minimal Dependencies**       | ✅ No dependencies beyond the shell environment.       | ❌ Requires installation of Nextflow.                  | ❌ Requires Snakemake installation and dependencies.    |
+| **Transparency and Portability** | ✅ Scripts are transparent and easy to share.          | ❌ Harder to share due to Nextflow-specific configurations. | ❌ Requires setup for reproducibility and sharing.     |
+| **Parallelism and Scalability** | ❌ Manual parallelism setup, not scalable for large datasets. | ✅ Automatic parallelism and scalability.              | ✅ Built-in parallelism, highly scalable.               |
+| **Community Support**          | ✅ Broad community, but not bioinformatics-specific.   | ✅ Growing support in bioinformatics.                  | ✅ Strong bioinformatics community with many workflows. |
+| **Reproducibility**            | ❌ Depends on the environment and script setup.        | ✅ Highly reproducible with containers and environment management. | ✅ Ensures reproducibility via dependency tracking.    |
+| **Suitability for Bioinformatics** | ✅ Good for small pipelines or single tasks.            | ✅ Great for complex pipelines with multiple dependencies. | ✅ Excellent for bioinformatics, integrates with tools. |
+
+
+---
 
 ## Project Structure
 
