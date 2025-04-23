@@ -1,0 +1,39 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+
+    yum install -y python39
+    pip3 install interop
+
+    cd /usr/local/bin
+    ln -s /usr/bin/python3 python
+
+
+    yum groupinstall -y "Development Tools"
+    yum install -y git
+    yum install -y cmake
+
+    mkdir /software
+    cd /software
+    git clone https://github.com/Illumina/interop.git
+    mkdir build
+    cd build
+    cmake ../interop
+    cmake --build .
+
+
+
+%environment
+    export PYTHONNOUSERSITE=1
+    export PATH=/software/build/src/apps:$PATH
+    export PYTHONPATH=":/usr/local/lib64/python3.9/site-packages"
+
+
+%runscript
+    #interop $@
+    

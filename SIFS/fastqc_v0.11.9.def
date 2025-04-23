@@ -1,0 +1,30 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+
+    yum install -y wget
+    yum install -y unzip
+
+    yum install -y java-11-openjdk
+    yum install -y xorg-x11-server-Xorg xorg-x11-xauth xorg-x11-utils
+
+    yum install -y perl
+    yum install -y glibc-locale-source glibc-langpack-en
+    localedef -c -f UTF-8 -i en_GB en_GB.UTF-8
+
+    mkdir /software
+    cd /software
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+    unzip fastqc_v0.11.9.zip
+
+    chmod 755 /software/FastQC/fastqc
+
+%environment
+    export JAVA_OPTS="-Djava.awt.headless=true"
+    export PATH=/software/FastQC/:$PATH
+
+%runscript
+    fastqc $@
+

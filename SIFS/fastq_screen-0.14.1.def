@@ -1,0 +1,31 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+    yum search epel-release
+    yum info epel-release
+    yum install -y epel-release
+    yum install -y gzip
+    yum install -y wget
+
+    yum install -y perl
+    yum install -y glibc-locale-source glibc-langpack-en
+    localedef -c -f UTF-8 -i en_GB en_GB.UTF-8
+
+    yum install -y bwa
+    yum install -y samtools
+    yum install -y perl-GDGraph
+
+    mkdir /software
+    cd /software
+    wget https://github.com/StevenWingett/FastQ-Screen/archive/refs/tags/v0.14.1.tar.gz
+    tar -xvpf v0.14.1.tar.gz
+
+
+%environment
+    export PATH=/software/FastQ-Screen-0.14.1:$PATH
+
+%runscript
+    fastq_screen $@
+     

@@ -1,0 +1,21 @@
+
+Bootstrap: docker
+From: centos:8
+
+%post
+    yum install -y wget
+    yum install -y unzip
+
+    mkdir /software
+    cd /software
+    wget https://xoanon.cf.ac.uk/illumina/bcl2fastq2-v2-20-0-linux-x86-64.zip
+    unzip bcl2fastq2-v2-20-0-linux-x86-64.zip
+
+    yum install -y /software/bcl2fastq2-v2.20.0.422-Linux-x86_64.rpm
+
+%environment
+    export PATH=/software:$PATH
+
+%runscript
+    bcl2fastq $@
+
