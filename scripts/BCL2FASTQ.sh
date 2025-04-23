@@ -84,7 +84,7 @@ singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $FASTQC_SIF fas
 # fastq_screen
 mkdir -p $Base/$JobID/logs/DEMUX/Fastqscreen
 for i in $(cd ${FQDIR}/ && find . -name "*.fastq.gz"); do
-singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $FASTQ_SCREEN_SIF fastq_screen --conf SIFS/fastq_screen.conf ${FQDIR}/${i} --outdir ${LOGS}/Fastqscreen --subset 50000
+singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $FASTQ_SCREEN_SIF fastq_screen --conf resources/fastqscreen/fastq_screen.conf ${FQDIR}/${i} --outdir ${LOGS}/Fastqscreen --subset 50000
 done
 
 # interop
