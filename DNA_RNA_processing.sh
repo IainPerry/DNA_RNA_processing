@@ -150,6 +150,18 @@ else
   exit 1  # Error out if neither RNA nor DNA target is set
 fi
 
+# Set max jobs function
+wait_for_slot() {
+  while true; do
+    num_jobs=$(squeue -u $USER | wc -l)
+    if [ "$num_jobs" -lt "$MAX_JOBS" ]; then
+      break
+    fi
+    echo "$(date '+%F %T') - Waiting for job slot: $num_jobs jobs running/pending..."
+    sleep 60
+  done
+}
+
 # Setup
 mkdir -p ${Base}/$JobID/
 echo "Created on `date`" >> ${log_file}
@@ -181,7 +193,7 @@ if [ "$SKIPMERGE" = "TRUE" ]; then
         for i in $SamplesRaw; do
             dest_file="${destination_dir}/${i}_M_F.fq.gz"
             if [ ! -s "$dest_file" ]; then
-                ln -s -f "$Base/$JobID/fastq/${i}*${SuffixRawSE}" "$dest_file"
+                ln -s -f "$DataRaw/${i}*${SuffixRawSE}" "$dest_file"
             fi
         done
     elif [ "$RUNTYPE" = "PE" ]; then
@@ -248,6 +260,7 @@ if [ "$SKIPQCTRIM" = "TRUE" ]; then
     echo "$(date '+%F %T') - Skipping Trimming" >> $log_file
 else
     for i in $SamplesRaw; do
+       wait_for_slot
 
       #  while [ $(squeue -u $USER | wc -l) -lt $max_jobs ]; do
       #      sleep 60
@@ -296,6 +309,7 @@ if [ "$SKIP_RNA_MAP" = "TRUE" ]; then
     echo "$(date '+%F %T') - Skipping RNA Mapping"  >> $log_file
 else
     for i in $SamplesRaw; do
+        wait_for_slot
         echo "$(date '+%F %T') - Starting RNA Mapping job ${i}" >> $log_file
 
          if [ "$Species" = "Human" ];
@@ -347,6 +361,7 @@ if [ "$SKIP_DNA_MAP" = "TRUE" ]; then
     echo "$(date '+%F %T') - Skipping DNA Mapping"  >> $log_file
 else
     for i in $SamplesRaw; do
+        wait_for_slot
         echo "$(date '+%F %T') - Starting DNA Mapping job ${i}" >> $log_file
 
          if [ "$Species" = "Human" ];
@@ -404,7 +419,8 @@ if [ "$SKIPINDEX" = "TRUE" ];
   then echo "$(date '+%F %T') - Skipping Indexing" >> $log_file
 else
       for i in $SamplesRaw; do
-        echo "$(date '+%F %T') - Starting Indexing job ${i}" >> $log_file
+          wait_for_slot
+          echo "$(date '+%F %T') - Starting Indexing job ${i}" >> $log_file
 
          if [ "$Species" = "Human" ];
             then STARgenome="$STARgenomeH"
@@ -461,7 +477,8 @@ if [ "$SKIPFC" = "TRUE" ];
   then echo "$(date '+%F %T') - Skipping Feature Counts" >> $log_file
 else
       for i in $SamplesRaw; do
-        echo "$(date '+%F %T') - Starting Feature Counts job ${i}" >> $log_file
+         wait_for_slot
+         echo "$(date '+%F %T') - Starting Feature Counts job ${i}" >> $log_file
 
          if [ "$Species" = "Human" ];
             then STARgenome="$STARgenomeH"
@@ -550,6 +567,7 @@ else
     fi
 
     while IFS= read -r line; do
+      wait_for_slot
       sample=$(echo "$line" | awk '{print $1}')
       matched_sample=$(echo "$line" | awk '{print $2}')
 
@@ -594,7 +612,8 @@ else
 
   else
     for i in $SamplesRaw; do
-      echo "$(date '+%F %T') - Starting Germline Variant calling job ${i}" >> "$log_file"
+        wait_for_slot
+        echo "$(date '+%F %T') - Starting Germline Variant calling job ${i}" >> "$log_file"
 
       if [ "$Species" = "Human" ]; then
         FASTAref="$FASTArefH"
@@ -643,13 +662,13 @@ echo "$WAITFOR4"
 # run multiqc
 if [ "$SKIPMULTIQC" = "TRUE" ];
   then echo "$(date '+%F %T') - Skipping MultiQC" >> $log_file
-  else sbatch --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=1 --time=0-0:10 \
+  else wait_for_slot
+       sbatch --account=${SLURM_ACCOUNT} --nodes=1 --ntasks-per-node=1 --cpus-per-task=1 --time=0-0:10 \
               --error="$LOGS/slurm_QC.err" --output="$LOGS/slurm_QC.out" --dependency=afterok${WAITFOR4} \
               --wrap="module load $SINGULARITY
                       echo "Starting MultiQC" >> $log_file
                       singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $MULTIQC_SIF multiqc \
                                        -f $LOGS \
                                        -o $LOGS/ \
-                                       --config $MC_config
-"
+                                       --config $MC_config"
 fi
