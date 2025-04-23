@@ -98,7 +98,6 @@ singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $INTEROP_SIF pl
 singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $INTEROP_SIF plot_by_flowcell $DataRaw | gnuplot > $LOGS/DEMUX/interop/plot_by_flowcell.png
 singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $INTEROP_SIF plot_flowcell $DataRaw | gnuplot > $LOGS/DEMUX/interop/plot_flowcell.png
 
-montage *png -mode Concatenate -frame 5 -tile 2x4 InterOp_mqc.png
 montage $LOGS/DEMUX/interop/*.png -mode Concatenate -frame 5 -tile 2x4 $LOGS/DEMUX/interop/InterOp_mqc.png
 
 
