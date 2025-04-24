@@ -1,13 +1,22 @@
-# Log variables
-log_file="${JobID}_log.txt"
+# Defaults
+In this section i'll attempt to explain why certain sections are run.
 
-# Log selected variables for reference
+### Log variables
+The below is run to define a log file for a job report to flow in. This is not individual processes such as mapping, but more how the whole script is being co-ordinated.
+`log_file="${JobID}_log.txt"`
+
+### Log selected variables for reference
+When Debug is turned on. ***compgen*** will run. its a built-in utility that gives huge amounts of user and system data that can help someone identify a system specific bug.
+```
 if [ "$DEBUG" = "TRUE" ]; then
     # If DEBUG is TRUE, log all environment variables using compgen
     echo "$(date '+%F %T') - DEBUG MODE: Logging all environment variables:" >> $log_file
     compgen -v | while read var; do
         echo "$(date '+%F %T') - $var=${!var}" >> $log_file
     done
+```
+If you dont need that, and for the most part you hopefully wont, just export the variables to your log file
+```
 else
 echo "$(date '+%F %T') - Logging key variables:" >> $log_file
 echo "$(date '+%F %T') - DEBUG=$DEBUG" >> $log_file
@@ -59,8 +68,11 @@ echo "$(date '+%F %T') - MULTIQC_SIF=$MULTIQC_SIF" >> $log_file
 echo "$(date '+%F %T') - MC_config=$MC_config" >> $log_file
 echo "$(date '+%F %T') - max_jobs=$max_jobs" >> $log_file
 fi
+```
 
-# Check targit is RNA or DNA and ensure only one runs
+### Check targit is RNA or DNA and ensure only one runs
+This is one of those test for user error. RNA should be mapped with STAR, and DNA with BWA, so if you've selected the wrong mapper, it will kill the process and let you correct the mapper.
+```
 if [ "$TARGET" == "RNA" ]; then
   if [ "$SKIP_DNA_MAP" != "TRUE" ]; then
     echo "$(date '+%F %T') - RNA target selected, skipping DNA mapping." >> $log_file
@@ -75,8 +87,10 @@ else
   echo "$(date '+%F %T') - ERROR: Neither RNA nor DNA target selected. Exiting..." >> $log_file
   exit 1  # Error out if neither RNA nor DNA target is set
 fi
-
-# Set max jobs function
+```
+### Set max jobs function
+In Options we said certain slurm schedulers give uses a max number of jobs they can submit. This is the function to slow job submission so as not to over submit and see jobs killed.
+```
 wait_for_slot() {
   while true; do
     num_jobs=$(squeue -u $USER | wc -l)
@@ -87,8 +101,11 @@ wait_for_slot() {
     sleep 60
   done
 }
+```
 
-# Setup
+### Setup
+Finally we want to set up the directory structure thats going to be used for all stages. We'll also set variable names in the process
+```
 mkdir -p ${Base}/$JobID/
 echo "Created on `date`" >> ${log_file}
 mkdir -p $Base/$JobID/logs/trim
@@ -107,3 +124,4 @@ VCF="$Base/$JobID/VCF"
 mkdir -p $Base/$JobID/counts
 COUNTS="$Base/$JobID/counts"
 echo "$(date '+%F %T') - Made subdirectories" >> $log_file
+```
