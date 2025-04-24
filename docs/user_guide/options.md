@@ -1,6 +1,6 @@
 # Stages
 
-##SKIPS
+## SKIPS
 These variables control which stages of the pipeline are skipped. Setting a flag to TRUE will bypass that stage. Useful for restarting partial runs, testing modules in isolation, or tailoring to specific datasets (e.g. RNA-only, DNA-only).
 
 ### SKIPMERGE
