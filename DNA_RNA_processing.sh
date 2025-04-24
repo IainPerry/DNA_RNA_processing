@@ -26,7 +26,7 @@
     CV="gn" #gn ex tx
     MODEL="WGS"
     RUNTYPE="PE"
-    SamplesRaw="*R1.fq.gz" #fq.gq | fastq.gz | fastq
+    SamplesRaw=$(<samples_names.txt)
     SuffixRawF="*R1.fq.gz"
     SuffixRawR="*R2.fq.gz"
     SuffixRawSE="*.fq.gz"
