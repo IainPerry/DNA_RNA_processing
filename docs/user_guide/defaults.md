@@ -1,6 +1,7 @@
 # Defaults
 In this section i'll attempt to explain why certain sections are run.
 
+## Logging
 ### Log variables
 The below is run to define a log file for a job report to flow in. This is not individual processes such as mapping, but more how the whole script is being co-ordinated.
 `log_file="${JobID}_log.txt"`
@@ -69,7 +70,7 @@ echo "$(date '+%F %T') - MC_config=$MC_config" >> $log_file
 echo "$(date '+%F %T') - max_jobs=$max_jobs" >> $log_file
 fi
 ```
-
+## Checks
 ### Check targit is RNA or DNA and ensure only one runs
 This is one of those test for user error. RNA should be mapped with STAR, and DNA with BWA, so if you've selected the wrong mapper, it will kill the process and let you correct the mapper.
 ```
@@ -103,6 +104,7 @@ wait_for_slot() {
 }
 ```
 
+## Main setup
 ### Setup
 Finally we want to set up the directory structure thats going to be used for all stages. We'll also set variable names in the process
 ```
