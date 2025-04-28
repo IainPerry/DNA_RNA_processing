@@ -1,6 +1,6 @@
 # RNA Mapping
 
-### Logic
+## Logic
 Just like with fastp, we run the job exacly the same.
 
 ```
@@ -18,7 +18,7 @@ else
          fi
 ```
 
-### WAITFOR
+## WAITFOR
 The main difference is we now have `--dependency` set in our sbatch command. Because we need fastp to have finished...
 ...we use slurms dependency to wait for a successful end of all job id's set in the WAITFOR set in fastp.
 Once they have all completed, queued up rna_mappings can start.
@@ -30,7 +30,7 @@ It also sets its own WAITFOR for the next job in the pipeline.
             --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterok${WAITFOR} \
             --wrap="module load $SINGULARITY
 ```
-### STAR
+## STAR
 This section of the pipeline uses STAR (Spliced Transcripts Alignment to a Reference) to perform RNA-Seq read mapping. 
 STAR is a fast and accurate aligner for RNA-seq data that performs spliced alignment to a reference genome. 
 The mapping step aligns trimmed reads (either single-end or paired-end) to the genome, generating a BAM file sorted by coordinates for downstream analyses.
