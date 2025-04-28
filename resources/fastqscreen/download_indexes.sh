@@ -2,7 +2,7 @@
 
 BASE_DIR="$PWD"
 
-# Bowtie2 indexer (make sure it's in your PATH)
+# Bwa indexer (make sure it's in your PATH)
     SINGULARITY="singularity/3.8.5"
     SIF_DIR="$Base/SIFS"
     BCL2FASTQ_SIF="$SIF_DIR/bcl2fastq2-v2-20-0.sif"
