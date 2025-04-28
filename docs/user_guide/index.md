@@ -1,6 +1,6 @@
 # Indexing
 
-### Logic
+## Logic
 This should really be run for both RNA and DNA, it includes stats as part of the step.
 We first want to set variables
 ```
@@ -31,13 +31,13 @@ Our sbatch gets a little more complicated with if statements to allow for identi
         if [ -f "$BAM/${i}_dedup.bam" ]; then
             echo "Indexing deduplicated BAM: ${i}_dedup.bam"
 ```
-### Samtools
+## Samtools
 If its from bwa, we use samtools to index
 ```
             singularity exec --bind "$Base/:$Base/" --bind "$SIF_DIR/:$SIF_DIR/" "$SAMTOOLS_SIF" \
                 samtools index -@ 2 "$BAM/${i}_dedup.bam"
 ```
-### Qualimap
+## Qualimap
 We then use qualimap to run some statistics on the bam files.
 + we define the command `qualimap bamqc`
 + we define the input bam
