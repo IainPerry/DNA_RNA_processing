@@ -1,6 +1,6 @@
 # Feature Counting
 
-### Logic
+## Logic
 Just like with all our scripts so far, the logic is defined at the beginning with wait for and dependencies. 
 This will only be run for RNA data so we could put a kill command in if we really wanted
 ```
@@ -24,7 +24,7 @@ else
             --error="$LOGS/counts/slurm_${i}_FC.err" --output="$LOGS/counts/slurm_${i}_FC.out" --dependency=afterok${WAITFOR3} \
             --wrap="module load $SINGULARITY
 ```
-### Featurecounts
+## Featurecounts
 Depending on the level we are interested in. i.e. counting at gene, transcript, or exon level. For most analysis gene is the right choice.
 >! This section is currently under-developed for options. Really we need to add variables for define for paired or single end sequencing and strand specificity.
 ```
@@ -66,7 +66,7 @@ elif [ "$CV" = "gn" ];
                     -o $COUNTS/${i}.gn.out \
                     $BAM/${i}_mapAligned.sortedByCoord.out.bam
 ```
-### Post processing
+## Post processing
 We then take feature count's output, which is a table of read counts for each gene, and select only the ones we want.
 we then remove header info that we dont need.
 ```
