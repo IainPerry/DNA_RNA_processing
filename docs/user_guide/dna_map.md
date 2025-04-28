@@ -42,6 +42,7 @@ if [ "$RUNTYPE" = "PE" ];
                    > "$BAM/${i}.sam"
 fi
 ```
+### Samtools
 Now we need to convert the sam file to a bam using samtools
 + we define the process `samtools sort`
 + the number of threads `-@8`
@@ -54,6 +55,7 @@ Now we need to convert the sam file to a bam using samtools
                    -o  "$BAM/${i}.bam" \
                    "$BAM/${i}.sam"
 ```
+### Picard
 Unlike STAR, duplicates do matter, particually when variant calling. for this we use our third tool, Picard.
 + we define the process `java -jar $PICARD Mark Duplicates`
 + we define the input bam
