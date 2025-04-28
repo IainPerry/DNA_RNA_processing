@@ -7,7 +7,7 @@ We can talk about the nuances of quality trimming elswhere, but fastp is ***fast
 
 The trimming step is run using Singularity containers for reproducibility, and is submitted as a batch job using SLURM.
 
-### Logic
+## Logic
 We set WAITFOR, this is important for later but we then check if SKIPQCTRIM=TRUE, if so, trimming is skipped.
 Otherwise, the script loops through each sample and:
  + Waits for an available job slot `wait_for_slot`.
@@ -26,7 +26,7 @@ We  let the log file know we are starting trimming for each sample.
 ```
         echo "$(date '+%F %T') - Starting trimming job ${i}" >> $log_file
 ```
-### sbatch 
+## sbatch 
 Our slurm script is actually wrapped below, but first we want to give slurm all of the details we need.
 The wrapped slurm script starts after `--wrap="` and ends with `"`
 The whole slurm sbatch command is set as a variable function named ***RETVAL***
@@ -37,7 +37,7 @@ The whole slurm sbatch command is set as a variable function named ***RETVAL***
             --wrap="module load $SINGULARITY
 ```
 
-### fastp script
+## fastp script
 The actual slurm script first loads singularity then runs the fastp container using either PE or SE options.
 We set inputs `--in1` `--in2`
 We set outputs `--out1` `--out2`
