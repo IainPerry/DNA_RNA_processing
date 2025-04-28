@@ -218,6 +218,7 @@ else
             if [ "$RUNTYPE" = "SE" ]; then
                 files_se=$(find "$DataRaw" -type f -name "${sample_name}${SuffixRawSE}")
                 if [ -n "$files_se" ]; then
+                    > "$dest_file_f"
                     for file in $files_se; do
                         cat "$file" >> "$dest_file_f"
                     done
@@ -229,6 +230,8 @@ else
                 files_r1=$(find "$DataRaw" -type f -name "${sample_name}${SuffixRawF}")
                 files_r2=$(find "$DataRaw" -type f -name "${sample_name}${SuffixRawR}")
                 if [ -n "$files_r1" ] && [ -n "$files_r2" ]; then
+                    > "$dest_file_f"
+                    > "$dest_file_r"
                     for file_r1 in $files_r1; do
                         cat "$file_r1" >> "$dest_file_f"
                         echo "$(date '+%F %T') - Merged R1 files for $sample_name" >> "$log_file"
