@@ -3,3 +3,11 @@
 - User guide
   - [Options](user_guide/options.md)
   - [Defaults](user_guide/defaults.md)
+  - [Merging](user_guide/merge.md)
+  - [Trimming](user_guide/trim.md)
+  - [RNA Mapping](user_guide/rna_map.md)
+  - [DNA Mapping](user_guide/dna_map.md)
+  - [Indexing](user_guide/index.md)
+  - [Feature Counting](user_guide/feat_count.md)
+  - [SNP Calling](user_guide/snp_call.md)
+  - [Stats](user_guide/mc_stats.md)
