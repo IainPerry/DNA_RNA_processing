@@ -1,6 +1,6 @@
 # SNP Variant Calling
 
-### Logic
+## Logic
 First step is defining if we are interested in germline mutations, or somatic mutations.
 "GATK is the Gold standard" is a quote by GATK about GATK. Historically this was true and it certainly is a stick to measure others aginst.
 But newer tools are just as effective and significantly faster and more straightforward to run.
@@ -16,7 +16,7 @@ if [ "$SKIPSNP" = "TRUE" ]; then
 
 else
 ```
-### DeepSomatic
+## DeepSomatic
 Deep Somatic requires the additional use of a table file that says what tumour sample is matched to non-tumour sample. 
 i.e. we are comparing the difference between two samples. 
 To explain this a bit better, we have germline mutations from birth, if we are interested in cancer for example, we may not care about some mutations.
@@ -74,7 +74,7 @@ For deepsomatic
               --sample_name_normal=${matched_sample}_normal \
               --sample_name_tumor=${sample}_tumor
 ```
-### BCFtools
+## BCFtools
 We can additionally perform some stats on the generated VCF files
 ```
 
@@ -111,7 +111,7 @@ We can additionally perform some stats on the generated VCF files
 
           mkdir -p $TMP/${i}
 ```
-### Deepvariant
+## Deepvariant
 And similarly we now run for deepvariant. If we are only interested in all mutations, this is a faster and easier option.
 ```
 
