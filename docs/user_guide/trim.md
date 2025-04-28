@@ -26,6 +26,7 @@ We  let the log file know we are starting trimming for each sample.
 ```
         echo "$(date '+%F %T') - Starting trimming job ${i}" >> $log_file
 ```
+### sbatch 
 Our slurm script is actually wrapped below, but first we want to give slurm all of the details we need.
 The wrapped slurm script starts after `--wrap="` and ends with `"`
 The whole slurm sbatch command is set as a variable function named ***RETVAL***
@@ -35,6 +36,8 @@ The whole slurm sbatch command is set as a variable function named ***RETVAL***
             --error="$LOGS/trim/slurm_${i}_trim.err" --output="$LOGS/trim/slurm_${i}_trim.out" \
             --wrap="module load $SINGULARITY
 ```
+
+### fastp script
 The actual slurm script first loads singularity then runs the fastp container using either PE or SE options.
 We set inputs `--in1` `--in2`
 We set outputs `--out1` `--out2`
