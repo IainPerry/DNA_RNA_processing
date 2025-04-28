@@ -1,5 +1,5 @@
 # DNA Mapping
-### Logic
+## Logic
 And just like RNA Mapping...
 ```
 WAITFOR2="$WAITFOR2:1"
@@ -20,7 +20,7 @@ echo "Waitfor is: $WAITFOR"
             --error="$LOGS/bam/slurm_${i}_map.err" --output="$LOGS/bam/slurm_${i}_map.out" --dependency=afterok${WAITFOR} \
             --wrap="module load $SINGULARITY
 ```
-### BWA
+## BWA
 Unlike in STAR, the bwa command is somewhat simpler, and yet more complex.
 First we map (either SE or PE):
 + we only need to define the process `bwa mem`.
@@ -42,7 +42,7 @@ if [ "$RUNTYPE" = "PE" ];
                    > "$BAM/${i}.sam"
 fi
 ```
-### Samtools
+## Samtools
 Now we need to convert the sam file to a bam using samtools
 + we define the process `samtools sort`
 + the number of threads `-@8`
@@ -55,7 +55,7 @@ Now we need to convert the sam file to a bam using samtools
                    -o  "$BAM/${i}.bam" \
                    "$BAM/${i}.sam"
 ```
-### Picard
+## Picard
 Unlike STAR, duplicates do matter, particually when variant calling. for this we use our third tool, Picard.
 + we define the process `java -jar $PICARD Mark Duplicates`
 + we define the input bam
