@@ -25,8 +25,46 @@ No prior knowledge of AWS should be necessary but several steps can be skipped w
 2. Locally run `aws configure`
 3. Create an SSH key pair `ssh-keygen -t rsa -f ~/.ssh/your-key-name`
 4. Create config file, see example config.
-5. Launch the cluster `pcluster create-cluster --cluster-name my-genomics-cluster --cluster-configuration pcluster-config.yaml`
-6. Connect to the cluster `pcluster ssh --cluster-name my-genomics-cluster -i ~/.ssh/your-key-name.pem`
+```
+   Region: us-east-1  # Adjust for your region
+
+Image:
+  Os: ubuntu2004
+
+HeadNode:
+  InstanceType: t3.medium
+  Ssh:
+    KeyName: your-key-name
+  Networking:
+    SubnetId: subnet-xxxxxxxx
+  LocalStorage:
+    RootVolume:
+      Size: 100
+
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: compute
+      ComputeResources:
+        - Name: c5n_large
+          InstanceType: c5n.large
+          MinCount: 0
+          MaxCount: 4
+      Networking:
+        SubnetIds:
+          - subnet-xxxxxxxx
+
+SharedStorage:
+  - MountDir: /shared
+    Name: shared
+    StorageType: Ebs
+    EbsSettings:
+      VolumeSize: 150
+
+ClusterName: my-genomics-cluster
+```
+6. Launch the cluster `pcluster create-cluster --cluster-name my-genomics-cluster --cluster-configuration pcluster-config.yaml`
+7. Connect to the cluster `pcluster ssh --cluster-name my-genomics-cluster -i ~/.ssh/your-key-name.pem`
 
 ## Launch instance Option 2 EC2:
 1. Go to the AWS management console and search for EC2 and click launch
@@ -81,6 +119,39 @@ As SLURM is not used on EC2 by default. If you want to use ParellelCluster. It u
 You can define your cluster in `pcluster-config.yaml`. The script should need fewer changes then.
 
 If you chose EC2, you'll need to change the script to run without SLURM. See the example section of code for the trimming stage.
+```
+WAITFOR=":1"
+if [ "$SKIPQCTRIM" = "TRUE" ]; then
+    echo "$(date '+%F %T') - Skipping Trimming" >> $log_file
+else
+    for i in $SamplesRaw; do
+        echo "$(date '+%F %T') - Starting trimming job ${i}" >> $log_file
+
+        if [ "$RUNTYPE" = "PE" ]; then
+            singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $FASTP_SIF fastp \
+                --in1 $TMP/${i}_M_F.fq.gz \
+                --in2 $TMP/${i}_M_R.fq.gz \
+                --out1 $TRIM/${i}_trimmed_F.fq.gz \
+                --out2 $TRIM/${i}_trimmed_R.fq.gz \
+                --thread 2 \
+                -h $LOGS/trim/${i}_fastp.html \
+                -j $LOGS/trim/${i}_fastp.json \
+                2> "$LOGS/trim/${i}_trim.err" \
+                > "$LOGS/trim/${i}_trim.out"
+        else
+            singularity exec --bind $Base/:$Base/ --bind $SIF_DIR/:$SIF_DIR/ $FASTP_SIF fastp \
+                --in1 $TMP/${i}_M_F.fq.gz \
+                --out1 $TRIM/${i}_trimmed_F.fq.gz \
+                --thread 2 \
+                -h $LOGS/trim/${i}_fastp.html \
+                -j $LOGS/trim/${i}_fastp.json \
+                2> "$LOGS/trim/${i}_trim.err" \
+                > "$LOGS/trim/${i}_trim.out"
+        fi
+
+    done
+fi
+```
 
 ## Run
 If you're happy with the modified script for EC2 or have set up ParallelCluster and configured everything. Run.
