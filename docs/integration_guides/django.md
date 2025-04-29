@@ -238,6 +238,7 @@ Django version 2.2.14, using settings 'projectviewer.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
+![Upload page we have made](../_images/django3.png)
 
 ## Extra steps
 This generates a just the framework, no pretty layout, to do include
@@ -249,7 +250,6 @@ This generates a just the framework, no pretty layout, to do include
 ## 1. Tabs for Navigation
 For this we'll define a base.html to add to in ***reports/templates/base.html***
 ```
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -257,6 +257,14 @@ For this we'll define a base.html to add to in ***reports/templates/base.html***
     <title>{% block title %}Project Viewer{% endblock %}</title>
 </head>
 <body>
+    <!-- templates/base.html -->
+    
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
     <nav>
         <a href="{% url 'upload_report' %}">Upload Report</a> |
         <a href="{% url 'view_report' %}">Search Reports</a>
@@ -281,6 +289,81 @@ and then right at the end
 ## 2. SQLite3 Database 
 (though other SQL dbs could be used)
 This should be already setup but empty. We should look to import some test data
+I'll setup search to display an empty table
+in ***reports/views.py***
+```
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .forms import ReportUploadForm
+from .models import ProjectReport
+
+@login_required
+def upload_report(request):
+    if request.method == 'POST':
+        form = ReportUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ReportUploadForm()
+    return render(request, 'upload.html', {'form': form})
+
+@login_required
+def view_report(request):
+    query = request.GET.get('q')
+    report = None
+    reports = ProjectReport.objects.all()
+    if query:
+        try:
+            report = ProjectReport.objects.get(project_name=query)
+        except ProjectReport.DoesNotExist:
+            report = None
+    return render(request, 'search.html', {
+        'report': report,
+        'reports': reports,
+        })
+```
+my ***reports/templates/search.html*** now looks like this
+```
+{% extends 'base.html' %}
+{% block content %}
+<h2>Search Project Reports</h2>
+<form method="get">
+    <input type="text" name="q" placeholder="Enter project name" value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+{% if report %}
+  <h3>QC Report</h3>
+  <iframe src="{{ report.qc_report.url }}" width="100%" height="600px"></iframe>
+
+  <h3>SARTools Report</h3>
+  <iframe src="{{ report.sartools_report.url }}" width="100%" height="600px"></iframe>
+{% elif request.GET.q %}
+  <p>No report found for "{{ request.GET.q }}"</p>
+{% endif %}
+<hr>
+<h2>All Uploaded Reports</h2>
+<table border="1">
+    <tr>
+        <th>Project Name</th>
+        <th>QC Report</th>
+        <th>SARTools Report</th>
+        <th>Uploaded At</th>
+    </tr>
+    {% for r in reports %}
+    <tr>
+        <td>{{ r.project_name }}</td>
+        <td><a href="{{ r.qc_report.url }}">Download</a></td>
+        <td><a href="{{ r.sartools_report.url }}">Download</a></td>
+        <td>{{ r.uploaded_at }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No reports uploaded yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
+```
+
 
 ## 3. Admin and Authentication
 As this could involve sensitive data we want to lock data behind a password.
@@ -296,7 +379,68 @@ from .models import ProjectReport
 admin.site.register(ProjcetReport)
 
 ```
-You should add to ***projectviewer/settings.py*** `LOGIN_URL = '/admin/login/'`
+You should add to ***projectviewer/settings.py*** 
+```
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'login'
+
+'DIRS': [BASE_DIR / 'templates'], 
+```
+
+You should add to ***reports/views.py***
+```
+from django.contrib.auth.decorators import login_required
+```
+and also add `@login_required` before each ***def***
 
 Then we need to create a user. start with `python manage.py createsuperuser`
+
+A logout button would also be useful
+so to ***reports/urls.py*** add
 ```
+from django.urls import path
+from django.views.generic import RedirectView
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LogoutView
+from . import views
+
+urlpatterns = [
+    path('', RedirectView.as_view(url='search/', permanent=False)),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('upload/', views.upload_report, name='upload_report'),
+    path('search/', views.view_report, name='view_report'),
+]
+```
+add to ***projectviewer/urls.py*** `from django.contrib.auth import views as auth_views`
+and also:
+```
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+```
+Finally add a new html for login ***reports/templates/login.html***
+```
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Login</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Log in</button>
+  </form>
+{% if form.errors %}
+  <p style="color:red;">Invalid credentials. Please try again.</p>
+{% endif %}
+{% endblock %}
+```
+
+## Final comments
+This is barebones, nothing fancy, and you could spend plenty of time getting it to look better. But, this does give a basic viewer.
+Additional steps could include:
++ Modifying to improve visuals e.g. using crispy forms etc.
++ Adding a page that allows you to auto-generate a .json file and feed into a nextflow pipeline
++ Adding a viewer for currently running jobs. Nextflow tower might be a useful way of doing this.
+
+![Multiqc for a project](../_images/django1.png)
+![Sartools for a project](../_images/django2.png)
