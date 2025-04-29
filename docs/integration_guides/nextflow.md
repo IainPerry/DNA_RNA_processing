@@ -39,7 +39,9 @@ my_pipeline/
 │   └── sample1_M_R.fq.gz
 └── results/
 ```
+
 Nextflow is very obscure with directory structure. for example you may see directories generated that look like this:
+
 ```
 ├── 00/
 │   └── 0056da34a7b45ebb41f95f9e88bad9
@@ -49,6 +51,7 @@ Nextflow is very obscure with directory structure. for example you may see direc
 ## Config file
 Setting your nextflow.config file is the first step. Nexflow uses a version of java called ***groovy***
 Rather than set the job requirements in the script, we define them here.
+
 ```
 // Global settings
 process {
@@ -57,13 +60,15 @@ process {
     maxRetries = 2
     errorStrategy = 'retry'
 ```
+
 We can define resources for each step
 + We first define the nextflow process name
 + We then define number of cpus to use
 + We define memory to allocate
 + We give a timelimit for each job
 + We define which cluster to use.
-  + You may only have access to one queue, but HPC often has different queues for smaller and larger jobs
++ You may only have access to one queue, but HPC often has different queues for smaller and larger jobs
+    
 ```
     withName: '*Trim*' {
         cpus = 2
@@ -102,8 +107,11 @@ We can define resources for each step
         queue = 'large'
     }
 }
+
 ```
+
 Some places have docker instead of singularity, but we dont have that
+
 ```
 // Define profiles for local vs SLURM
 profiles {
@@ -136,8 +144,10 @@ params {
 }
 
 ```
+
 You'll notice above, we set the sif vairables here too. These can and should be overridden when submitting jobs, but they function as defaults.
 You can over ride like this:
+
 ```
 nextflow run main.nf -profile slurm \
   --input_dir 'raw_data' \
@@ -146,8 +156,13 @@ nextflow run main.nf -profile slurm \
   --run_type 'SE' \
   --slurm_account 'bioinf_team'
 ```
+
 or preferably with your variables in a .json which is mostly the same as our previous script.
+
 `nextflow run main.nf -profile slurm -params-file job_params.json`
+
+and
+
 ```
 {
   "SKIPMERGE": "",
@@ -203,10 +218,13 @@ or preferably with your variables in a .json which is mostly the same as our pre
   "MULTIQC_SIF": "/absolute/path/to/project/SIFS/multiqc-v1.11.sif",
   "MC_config": "/absolute/path/to/project/SIFS/multiqc.local.config"
 }
+
 ```
+
 ## main.nf
 This is what controls the main running of the script. The setting up and merging of files is such a low cpu job, we can run it on the head node.
 So we can include it here.
+
 ```
 // main.nf
 
@@ -297,8 +315,11 @@ workflow {
             }
         }
     }
+
 ```
+
 We then set up the optional modules to run.
+
 ```
     // Conditional step execution
     if (!params.skipqctrim) {
@@ -320,10 +341,13 @@ We then set up the optional modules to run.
         VARIANT()
     }
 }
+
 ```
+
 ## Example module for trim
 We also need to run our modules. Here is an example of running the trimming stage.
 Java runs a diffent approach of inputs and outputs, so we need to define them all athe beginning before the actual command is run below
+
 ```
 process trim_reads {
 
@@ -350,4 +374,5 @@ process trim_reads {
         -j ${out_json}
     """
 }
+
 ```
