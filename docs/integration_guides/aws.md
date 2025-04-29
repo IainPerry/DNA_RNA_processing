@@ -27,8 +27,7 @@ No prior knowledge of AWS should be necessary but several steps can be skipped w
 4. Create config file, see example config.
    
 ```
-   Region: us-east-1  # Adjust for your region
-
+Region: Europe 
 Image:
   Os: ubuntu2004
 
