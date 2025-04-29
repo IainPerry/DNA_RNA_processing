@@ -110,10 +110,10 @@ We can define resources for each step
 
 ```
 
-Some places have docker instead of singularity, but we dont have that
+Some places have docker instead of singularity, but we dont have that. So instead we disable it.
+
 
 ```
-// Define profiles for local vs SLURM
 profiles {
     local {
         process.executor = 'local'
@@ -128,7 +128,6 @@ profiles {
     }
 }
 
-// Custom parameters usable in any script
 params {
     input_dir = 'data'
     output_dir = 'results'
@@ -139,7 +138,7 @@ params {
     count_sif  = "${params.sif_dir}/subread_latest.sif"
     var_sif    = "${params.sif_dir}/gatk_latest.sif"
 
-    run_type = 'PE'  // or SE for single-end
+    run_type = 'PE'
     slurm_account = 'my_account_name'
 }
 
@@ -225,10 +224,8 @@ and
 This is what controls the main running of the script. The setting up and merging of files is such a low cpu job, we can run it on the head node.
 So we can include it here.
 
-```
 // main.nf
-
-// Import each module script
+```
 include { TRIM } from './bin/trim.nf'
 include { RNA_MAP } from './bin/rna_map.nf'
 include { DNA_MAP } from './bin/dna_map.nf'
@@ -236,11 +233,9 @@ include { INDEX } from './bin/index.nf'
 include { FEATCOUNT } from './bin/featcount.nf'
 include { VARIANT } from './bin/variant.nf'
 
-// Initialize log
 log_file = "${params.base}/${params.job_id}/pipeline.log"
 
 workflow {
-    // Project Setup
     def base = file(params.base)
     def jobid = params.job_id
     def logs = "${base}/${jobid}/logs"
@@ -262,7 +257,6 @@ workflow {
     }
     log.info "Directories created"
 
-    // Merge Setup
     def tmpDir = file("${base}/${jobid}/tmp")
     def samplesRaw = params.samples_raw.split("\n")
 
@@ -321,7 +315,6 @@ workflow {
 We then set up the optional modules to run.
 
 ```
-    // Conditional step execution
     if (!params.skipqctrim) {
         TRIM()
     }
