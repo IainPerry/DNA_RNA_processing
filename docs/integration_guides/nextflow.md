@@ -70,42 +70,42 @@ We can define resources for each step
 + You may only have access to one queue, but HPC often has different queues for smaller and larger jobs
     
 ```
-    withName: '*Trim*' {
-        cpus = 2
-        memory = '4 GB'
-        time = '2h'
-        queue = 'small'   
-    }
-    withName: '*RnaMap*' {
-        cpus = 8
-        memory = '32 GB'
-        time = '8h'
-        queue = 'large'
-    }
-    withName: '*DnaMap*' {
-        cpus = 16
-        memory = '64 GB'
-        time = '12h'
-        queue = 'large'
-    }
-    withName: '*Index*' {
-        cpus = 4
-        memory = '8 GB'
-        time = '2h'
-        queue = 'small'  
-    }
-    withName: '*Featcount*' {
-        cpus = 4
-        memory = '16 GB'
-        time = '2h'
-        queue = 'small'  
-    }
-    withName: '*Variant*' {
-        cpus = 8
-        memory = '32 GB'
-        time = '6h'
-        queue = 'large'
-    }
+withName: '*Trim*' {
+    cpus = 2
+    memory = '4 GB'
+    time = '2h'
+    queue = 'small'   
+}
+withName: '*RnaMap*' {
+    cpus = 8
+    memory = '32 GB'
+    time = '8h'
+    queue = 'large'
+}
+withName: '*DnaMap*' {
+    cpus = 16
+    memory = '64 GB'
+    time = '12h'
+    queue = 'large'
+}
+withName: '*Index*' {
+    cpus = 4
+    memory = '8 GB'
+    time = '2h'
+    queue = 'small'  
+}
+withName: '*Featcount*' {
+    cpus = 4
+    memory = '16 GB'
+    time = '2h'
+    queue = 'small'  
+}
+withName: '*Variant*' {
+    cpus = 8
+    memory = '32 GB'
+    time = '6h'
+    queue = 'large'
+}
 }
 
 ```
