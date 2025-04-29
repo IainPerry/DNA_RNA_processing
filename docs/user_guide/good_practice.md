@@ -42,11 +42,11 @@ Version control
 + As it is important in patient derrived samples. i.e. It is legally imperative to adhere to consent agreements. That may affect where you can publish results.
 
 ### Accreditation
-|Area | Requirement | Documented Evidence|
-|Data traceability | Sample → Result with audit trail | Folder structure, logs|
-|Pipeline validation | Sensitivity, specificity, LoD | Validation report|
-|Change control | Review, test, sign-off for changes | Change log, SOP updates|
-|Information governance | Security, anonymisation, data access | IG checklist, access logs|
-|Workflow reproducibility | Fixed versions, container use | Git tags, Singularity defs|
-|QC and reporting | Automated checks, thresholds | MultiQC, report templates|
-|Staff competency | Training, CPD, SOP knowledge | Training log, certificates|
+| **Area**                 | **Requirement**                      | **Documented Evidence**    |
+| Data traceability        | Sample → Result with audit trail     | Folder structure, logs     |
+| Pipeline validation      | Sensitivity, specificity, LoD        | Validation report          |
+| Change control           | Review, test, sign-off for changes   | Change log, SOP updates    |
+| Information governance   | Security, anonymisation, data access | IG checklist, access logs  |
+| Workflow reproducibility | Fixed versions, container use        | Git tags, Singularity defs |
+| QC and reporting         | Automated checks, thresholds         | MultiQC, report templates  |
+| Staff competency         | Training, CPD, SOP knowledge         | Training log, certificates |
