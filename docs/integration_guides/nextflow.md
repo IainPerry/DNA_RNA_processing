@@ -61,57 +61,55 @@ process {
     errorStrategy = 'retry'
 ```
 
-We can define resources for each step
-+ We first define the nextflow process name
-+ We then define number of cpus to use
-+ We define memory to allocate
-+ We give a timelimit for each job
+We can define resources for each step.
++ We first define the nextflow process name.
++ We then define number of cpus to use.
++ We define memory to allocate.
++ We give a timelimit for each job.
 + We define which cluster to use.
-+ You may only have access to one queue, but HPC often has different queues for smaller and larger jobs
++ You may only have access to one queue, but HPC often has different queues for smaller and larger jobs.
     
 ```
-withName: '*Trim*' {
-    cpus = 2
-    memory = '4 GB'
-    time = '2h'
-    queue = 'small'   
+    withName: '*Trim*' {
+        cpus = 2
+        memory = '4 GB'
+        time = '2h'
+        queue = 'small'   
+    }
+    withName: '*RnaMap*' {
+        cpus = 8
+        memory = '32 GB'
+        time = '8h'
+        queue = 'large'
+    }
+    withName: '*DnaMap*' {
+        cpus = 16
+        memory = '64 GB'
+        time = '12h'
+        queue = 'large'
+    }
+    withName: '*Index*' {
+        cpus = 4
+        memory = '8 GB'
+        time = '2h'
+        queue = 'small'  
+    }
+    withName: '*Featcount*' {
+        cpus = 4
+        memory = '16 GB'
+        time = '2h'
+        queue = 'small'  
+    }
+    withName: '*Variant*' {
+        cpus = 8
+        memory = '32 GB'
+        time = '6h'
+        queue = 'large'
+    }
 }
-withName: '*RnaMap*' {
-    cpus = 8
-    memory = '32 GB'
-    time = '8h'
-    queue = 'large'
-}
-withName: '*DnaMap*' {
-    cpus = 16
-    memory = '64 GB'
-    time = '12h'
-    queue = 'large'
-}
-withName: '*Index*' {
-    cpus = 4
-    memory = '8 GB'
-    time = '2h'
-    queue = 'small'  
-}
-withName: '*Featcount*' {
-    cpus = 4
-    memory = '16 GB'
-    time = '2h'
-    queue = 'small'  
-}
-withName: '*Variant*' {
-    cpus = 8
-    memory = '32 GB'
-    time = '6h'
-    queue = 'large'
-}
-}
-
 ```
 
 Some places have docker instead of singularity, but we dont have that. So instead we disable it.
-
 
 ```
 profiles {
@@ -157,10 +155,10 @@ nextflow run main.nf -profile slurm \
 ```
 
 or preferably with your variables in a .json which is mostly the same as our previous script.
-
+Run with:
 `nextflow run main.nf -profile slurm -params-file job_params.json`
 
-and
+and the .json looks like this:
 
 ```
 {
@@ -224,8 +222,8 @@ and
 This is what controls the main running of the script. The setting up and merging of files is such a low cpu job, we can run it on the head node.
 So we can include it here.
 
-// main.nf
 ```
+// main.nf
 include { TRIM } from './bin/trim.nf'
 include { RNA_MAP } from './bin/rna_map.nf'
 include { DNA_MAP } from './bin/dna_map.nf'
