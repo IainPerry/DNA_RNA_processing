@@ -1,0 +1,36 @@
+Region: us-east-1  # Adjust for your region
+
+Image:
+  Os: ubuntu2004
+
+HeadNode:
+  InstanceType: t3.medium
+  Ssh:
+    KeyName: your-key-name
+  Networking:
+    SubnetId: subnet-xxxxxxxx
+  LocalStorage:
+    RootVolume:
+      Size: 100
+
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: compute
+      ComputeResources:
+        - Name: c5n_large
+          InstanceType: c5n.large
+          MinCount: 0
+          MaxCount: 4
+      Networking:
+        SubnetIds:
+          - subnet-xxxxxxxx
+
+SharedStorage:
+  - MountDir: /shared
+    Name: shared
+    StorageType: Ebs
+    EbsSettings:
+      VolumeSize: 150
+
+ClusterName: my-genomics-cluster
