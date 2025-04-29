@@ -8,7 +8,7 @@ No prior knowledge of AWS should be necessary but several steps can be skipped w
 + Run the script
 + Download results
 
-### Prerequisites
+## Prerequisites
 + It is highly advised a medium to high level of linux command line knowledge
 + A terminal with ssh and scp enabled
 
