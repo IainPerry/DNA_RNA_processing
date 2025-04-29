@@ -42,7 +42,9 @@ Version control
 + As it is important in patient derrived samples. i.e. It is legally imperative to adhere to consent agreements. That may affect where you can publish results.
 
 ### Accreditation
+
 | **Area**                 | **Requirement**                      | **Documented Evidence**    |
+|--------------------------|--------------------------------------|----------------------------|
 | Data traceability        | Sample → Result with audit trail     | Folder structure, logs     |
 | Pipeline validation      | Sensitivity, specificity, LoD        | Validation report          |
 | Change control           | Review, test, sign-off for changes   | Change log, SOP updates    |
