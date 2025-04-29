@@ -25,7 +25,7 @@ No prior knowledge of AWS should be necessary but several steps can be skipped w
 2. Locally run `aws configure`
 3. Create an SSH key pair `ssh-keygen -t rsa -f ~/.ssh/your-key-name`
 4. Create config file, see example config.
-   
+
 ```
 Region: Europe 
 Image:
