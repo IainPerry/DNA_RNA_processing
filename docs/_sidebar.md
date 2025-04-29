@@ -17,3 +17,8 @@
   - [SIFS](additional_scripts/make_sifs.md)
   - [Html clean](additional_scripts/html_clean.md)
   - [DESeq2](additional_scripts/deseq2.md)
+
+- Integration guides
+  -  [AWS](integration_guides/aws.md)
+  -  [Nextflow](integration_guides/nextflow.md)
+  -  [Django](integration_guides/django.md)
