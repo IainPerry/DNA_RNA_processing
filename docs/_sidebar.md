@@ -11,6 +11,7 @@
   - [Feature Counting](user_guide/feat_count.md)
   - [SNP Calling](user_guide/snp_call.md)
   - [Stats](user_guide/mc_stats.md)
+  - [Notes on GoodPractice](user_guide/good_practice.md)
 
 - Additional scripts guide
   - [Resources](additional_scripts/resources.md)
