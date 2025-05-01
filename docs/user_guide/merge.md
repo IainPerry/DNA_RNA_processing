@@ -69,12 +69,13 @@ The ***while IFS*** statement actually finishes with ***<<<"$SamplesRaw"***
 In truth it is probably best that the previous loop should also use a ***while*** loop, but it is a good demonstration on its use.
 
 | **Feature**     | **`for` loop**           | **`while` loop**       |
-| Splitting   | Splits on whitespace | Line-by-line       |
-| Spaces      | Breaks filename      | Can handle spaces  |
-| Empty lines | Skips empty lines    | Reads empty lines  |
-| Memory      | Loads entire list    | One line at a time |
-| Safety      | Can crash            | Safer for big list |
-|Preference   | Quick & simple       | Better for complex |
+|-----------------|--------------------------|------------------------|
+| Splitting       | Splits on whitespace | Line-by-line       |
+| Spaces          | Breaks filename      | Can handle spaces  |
+| Empty lines     | Skips empty lines    | Reads empty lines  |
+| Memory          | Loads entire list    | One line at a time |
+| Safety          | Can crash            | Safer for big list |
+| Preference      | Quick & simple       | Better for complex |
 
 Like with linking, we first setup what the output single files will be. In this case we are defining for forward and reverse at the begining.
 We also have a check for if the files exist. If they already exist we either forgot to run skip on this section, or we are dealing with a failed run.
