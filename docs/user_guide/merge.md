@@ -68,6 +68,7 @@ If we have not defined `RUNTYPE` as ***SE*** or ***PE*** then we will not know w
 The ***while IFS*** statement actually finishes with ***<<<"$SamplesRaw"***
 In truth it is probably best that the previous loop should also use a ***while*** loop, but it is a good demonstration on its use.
 
+
 | **Feature**     | **`for` loop**           | **`while` loop**       |
 |-----------------|--------------------------|------------------------|
 | Splitting       | Splits on whitespace | Line-by-line       |
