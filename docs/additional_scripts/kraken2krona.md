@@ -29,7 +29,7 @@ It should genrate a dynamic html like this:
 
 
 Here is a still view of one:
-[Example Krona](../_images/example_krona.png)
+![Example Krona](../_images/example_krona.png)
 
 
 
