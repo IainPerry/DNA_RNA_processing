@@ -19,6 +19,7 @@
   - [Html clean](additional_scripts/html_clean.md)
   - [DESeq2](additional_scripts/deseq2.md)
   - [BCL2Fastq](additional_scripts/bcl2fastq.md)
+  - [Kraken2Korona QC](additional_scripts/kraken2krona.md)
 
 - Integration guides
   -  [AWS](integration_guides/aws.md)
