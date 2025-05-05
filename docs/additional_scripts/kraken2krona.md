@@ -13,13 +13,17 @@ Krona provides a dynamic viewing of results from Kraken2
 
 ### Install
 To install [Krona](https://telatin.github.io/microbiome-bioinformatics/Kraken-to-Krona/), you can type:
-`conda dinstall -c bioconda krona`
+```
+conda dinstall -c bioconda krona
+```
 Then you'll need to install the local taxonomic database
-`ktUpdateTaxonomy.sh`
+```ktUpdateTaxonomy.sh```
 
 ### Running Krona
 You can genrate a plot of your data now with the command:
-`ktImportTaxonomy -m 1 -o Contam-check.html Kraken2_input.tsv`
+```
+ktImportTaxonomy -m 1 -o Contam-check.html Kraken2_input.tsv
+```
 It should genrate a dynamic html like this:
 [Example Krona](../_images/example_krona.png)
 [<button>Example Krona</button>](example_krona.html){:target="_blank"}
