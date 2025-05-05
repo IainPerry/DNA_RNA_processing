@@ -25,7 +25,7 @@ You can genrate a plot of your data now with the command:
 ktImportTaxonomy -m 1 -o Contam-check.html Kraken2_input.tsv
 ```
 It should genrate a dynamic html like this:
-[Example Krona](example_krona.html)
+[Example Krona](./example_krona.html)
 
 
 Here is a still view of one:
