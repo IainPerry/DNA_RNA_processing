@@ -112,9 +112,9 @@ kreport2mpa.py --percentages -r report.txt -o mpaper.txt
 
 ## Output
 It should genrate a dynamic html like this:
-[Example Krona](/docs/additional_scripts/example_krona.html)
+[Example Krona](/DNA_RNA_processing/example_krona.html)
 
-<a href="/docs/additional_scripts/example_krona.html" target="_blank">Example Krona</a>
+<a href="/docs/example_krona.html" target="_blank">Example Krona</a>
 
 
 Here is a still view of one:
